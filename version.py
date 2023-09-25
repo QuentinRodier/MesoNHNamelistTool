@@ -15,10 +15,9 @@ def convert56to57(nam):
             keyValueString, keyValue = getKeysValue(nam, el)
             nam = nam.replace(keyValueString,'')
             if keyValue:
-                nam_nebn = nam_nebn + keyValueString + ','
-            if nam_nebn:
-                nam_nebn = nam_nebn + ' /'
+                nam_nebn = nam_nebn + keyValueString + ', '
         if nam_nebn:
+            nam_nebn = nam_nebn + ' /'
             nam = nam + '&NAM_NEBn ' + nam_nebn + '\n'
 
     # &NAM_PARAM_ICE moved to &NAM_PARAM_ICEn
