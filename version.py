@@ -49,7 +49,8 @@ def convert56to57(nam):
     # &NAM_PARAM_LIMA
     keyValueString, keyValue = getKeysValue(nam, 'LBOUND')
     nam = nam.replace(keyValueString,'')
-    
+    nam = nam.replace('NMAXITER_MICRO','NMAXITER')
+
     # &NAM_TURB keys is moved to &NAM_TURBn
     if nam.find('&NAM_TURB ') != -1:
        nam_to_turbn_keys = ['XPHI_LIM', 'XSBL_O_BL', 'XFTOP_O_FSURF']
