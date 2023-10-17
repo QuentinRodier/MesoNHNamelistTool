@@ -30,6 +30,9 @@ def convert56to57(nam):
     nam = nam.replace('XCEDIS','XCED')
     nam = nam.replace('CSUBG_AUCV','CSUBG_AUCV_RC')
 
+    # The following protection is if one applies this function multiple times on the same namelist. Should be handle differently
+    nam = nam.replace('CSUBG_AUCV_RC_RC','CSUBG_AUCV_RC')
+
     # &NAM_PARAM_ICEn
     # Key change names
     nam = nam.replace('NMAXITER','NMAXITER_MICRO')
