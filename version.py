@@ -30,9 +30,9 @@ def convert56to57(nam):
     nam = nam.replace('XCEDIS','XCED')
     nam = nam.replace('CSUBG_AUCV','CSUBG_AUCV_RC')
 
-    # &NAM_PARAM_ICEn
+    # &NAM_PARAM_ICEn (and LIMA)
     # Key change names
-    nam = nam.replace('NMAXITER','NMAXITER_MICRO')
+    nam = nam.replace('NMAXITER_MICRO','NMAXITER')
     
     # Keys moved to NAM_PARAM_ICEn
     nam_to_icen_keys = ['CSUBG_AUCV_RC', 'CSUBG_AUCV_RI', 'CSUBG_MF_PDF']
@@ -49,7 +49,6 @@ def convert56to57(nam):
     # &NAM_PARAM_LIMA
     keyValueString, keyValue = getKeysValue(nam, 'LBOUND')
     nam = nam.replace(keyValueString,'')
-    nam = nam.replace('NMAXITER_MICRO','NMAXITER')
 
     # &NAM_TURB keys is moved to &NAM_TURBn
     if nam.find('&NAM_TURB ') != -1:
