@@ -21,7 +21,15 @@ def getKeysValue(nam, keyName):
                 keyValue = keyValue + next_char
                 index+=1
             next_char = nam[index+len(keyName)]
+    # Keys = Value string :
     keyValueString = keyName + keyValue
+    
+    # Check if the next significant char is a ',' in that case, remove it by adding it to keyValueString
+    index = nam.find(keyName)
+    nextChar = nextSignificantChar(nam,index+len(keyValueString)-1)
+    if nextChar == ',':
+        keyValueString += ','
+
     keyValue=keyValue.replace('=','')
     keyValue=keyValue.replace(' ','')
     return keyValueString, keyValue
@@ -48,6 +56,7 @@ def cleanCommas(nam):
             found=False
             if el == ',':
                 nextSymbol = nextSignificantChar(nam, index)
+                # Remove the comma if next Symbol is / or ','
                 if nextSymbol == '/' or nextSymbol == ',':
                     found=True
                     newnam = nam[:index] + nam[index+1:]
