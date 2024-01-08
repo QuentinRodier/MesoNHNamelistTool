@@ -70,8 +70,15 @@ def convert56to57(nam):
     # &NAM_PARAM_MF_SHALLn
     keyValueString, keyValue = getKeysValue(nam, 'XLAMBDA_MF')
     nam = nam.replace(keyValueString,'')
+    
+    # &NAM_DIAG
+    keyValueString, keyValue = getKeysValue(nam, 'CRAD_SAT')
+    nam = nam.replace(keyValueString,'')
 
     nam = cleanCommas(nam)
+    
+    # Add line return at end-of-file
+    nam = nam + '\n'
     return nam
 
 class Version():
