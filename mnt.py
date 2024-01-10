@@ -53,9 +53,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Namelist EXSEG.nam conversion from 5.6 to 5.7 ')
 
     #Inputs and outputs
-    gInOut = parser.add_argument_group('Input and output')
-    gInOut.add_argument('INPUT', help='EXSEG.nam input file')
-    gInOut.add_argument('OUTPUT', default=None, help='EXSEG.nam output file', nargs='?')
+    gInOut = parser.add_argument_group('Input(s) namelists ton convert')
+    gInOut.add_argument('INPUT', help='EXSEG.nam input file(s), multiple files allowed. Outputfile name = Input file name', nargs='+')
 
     #Version conversion
     gVersion = parser.add_argument_group('Conversion and version control')
@@ -66,12 +65,12 @@ if __name__ == '__main__':
     gAspect.add_argument('--applyf90nml', help='Only read and write by f90nml makes it prettier and ordered (not testes yet)', default=False, action='store_true')
 
     args = parser.parse_args()
-
-    namelist_tool = NAMELIST_TOOL(args.INPUT, args.OUTPUT)
-    if args.convert56to57: 
-        namelist_tool.convert56to57()
-        namelist_tool.write()    
-    if args.applyf90nml:
-        namelist_tool.openwithnml()
-        namelist_tool.applyf90nml()
-        namelist_tool.writewithnml()
+    for inputfile in args.INPUT:
+            namelist_tool = NAMELIST_TOOL(inputfile)            
+            if args.convert56to57: 
+                namelist_tool.convert56to57()
+                namelist_tool.write()    
+                if args.applyf90nml:
+                    namelist_tool.openwithnml()
+                    namelist_tool.applyf90nml()
+                    namelist_tool.writewithnml()
