@@ -93,6 +93,30 @@ def convert56to57(nam):
     keyValueString, keyValue = getKeysValue(nam, 'CRAD_SAT')
     nam = nam.replace(keyValueString,'')
 
+    # some SURFEX changes(not all)
+    keyValueString, keyValue = getKeysValue(nam, 'LSNOWDRIFT')
+    nam = nam.replace(keyValueString,'')
+
+    keyValueString, keyValue = getKeysValue(nam, 'NTIME_COUPLING')
+    nam = nam.replace(keyValueString,'')
+    
+    keyValueString, keyValue = getKeysValue(nam, 'XDT_RES')
+    nam = nam.replace(keyValueString,'')
+
+    keyValueString, keyValue = getKeysValue(nam, 'XDT_OFF')
+    nam = nam.replace(keyValueString,'')
+    
+    nam = nam.replace('XTDEEP_TEB','XTI_ROAD')
+
+    if nam.find('&NAM_TEB ') != -1:
+        print('WARNING, NAM_TEB not converted automatically !! must be converted ----BY HAND---, see https://www.umr-cnrm.fr/surfex/spip.php?article451')
+    if nam.find('&NAM_DATA_TEB_GARDEN ') != -1:
+        print('WARNING, NAM_DATA_TEB_GARDEN not converted automatically !! must be converted ----BY HAND---, see https://www.umr-cnrm.fr/surfex/spip.php?article451')
+    if nam.find('&NAM_DATA_TEB ') != -1:
+        print('WARNING, NAM_DATA_TEB not converted automatically !! must be converted ----BY HAND---, see https://www.umr-cnrm.fr/surfex/spip.php?article451')
+    if nam.find('&NAM_DATA_BEM ') != -1:
+        print('WARNING, NAM_DATA_BEM not converted automatically !! must be converted ----BY HAND---, see https://www.umr-cnrm.fr/surfex/spip.php?article451')
+
     nam = cleanCommas(nam)
     
     # Add line return at end-of-file
