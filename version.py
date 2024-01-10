@@ -29,7 +29,11 @@ def convert56to57(nam):
     nam = nam.replace('XKEMIN','XTKEMIN')
     nam = nam.replace('XCEDIS','XCED')
     nam = nam.replace('CSUBG_AUCV','CSUBG_AUCV_RC')
-
+    
+    # &NAM_TURB_CLOUD removed, keys moved to NAM_TURBn
+    if nam.find('NMODEL_CLOUD') != -1:
+        print('WARNING, NMODEL_CLOUD must be converted ----BY HAND--- with LCLOUDMODIF=T in &NAM_TURBn to each respective EXSEGn.nam ')
+    
     # The following protection is if one applies this function multiple times on the same namelist. Should be handle differently
     nam = nam.replace('CSUBG_AUCV_RC_RC','CSUBG_AUCV_RC')
 
@@ -49,6 +53,18 @@ def convert56to57(nam):
             else:
                 nam = nam.replace('&NAM_PARAM_ICEn', '&NAM_PARAM_ICEn ' + keyValueString + ', ')
     
+    # Keys moved to NAM_TURBn
+    nam_to_turbn_keys = ['CTURBLEN_CLOUD', 'XCOEF_AMPL_SAT', 'XCEI_MIN', 'XCEI_MAX']
+    for el in nam_to_turbn_keys:
+        keyValueString, keyValue = getKeysValue(nam, el)
+        nam = nam.replace(keyValueString,'')   
+        if keyValue:
+            # Check if the namelist already exist
+            if nam.find('&NAM_TURBn') == -1:
+                nam = nam + '&NAM_TURBn ' + keyValueString + '/'
+            else:
+                nam = nam.replace('&NAM_TURBn', '&NAM_TURBn ' + keyValueString + ', ')
+                
     # &NAM_PARAM_LIMA
     keyValueString, keyValue = getKeysValue(nam, 'LBOUND')
     nam = nam.replace(keyValueString,'')
@@ -68,8 +84,10 @@ def convert56to57(nam):
         nam = re.sub('&NAM_TURB\s*/', '', nam)
 
     # &NAM_PARAM_MF_SHALLn
-    keyValueString, keyValue = getKeysValue(nam, 'XLAMBDA_MF')
-    nam = nam.replace(keyValueString,'')
+    if nam.find('XLAMBDA_MF') != -1:
+        keyValueString, keyValue = getKeysValue(nam, 'XLAMBDA_MF')
+        print('WARNING, XLAMBDA_MF must be converted ----BY HAND--- with LTHETAS_MF=T to correspond to XLAMBDA_MF=5.87; LTHETAS_MF=F for XLAMBDA_MF=0')
+        nam = nam.replace(keyValueString,'')
     
     # &NAM_DIAG
     keyValueString, keyValue = getKeysValue(nam, 'CRAD_SAT')
