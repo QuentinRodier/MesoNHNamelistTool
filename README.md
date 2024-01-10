@@ -10,7 +10,7 @@ pip install [--user] f90nml
 
 # Setup
 Add to your $HOME/.bash_profile :
-export PATH=$PATH:pathofyourchoice/MesoNHNamelistTool:
+export PATH=$PATH:pathofyourchoice/MesoNHNamelistTool
 
 # How to use
 mnt.py --convert56to57 EXSEG1.nam
