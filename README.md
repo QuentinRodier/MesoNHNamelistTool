@@ -13,7 +13,11 @@ Add to your $HOME/.bash_profile :
 export PATH=$PATH:pathofyourchoice/MesoNHNamelistTool
 
 # How to use
+Apply only once by namelist file as it changes the input file.
+
 mnt.py --convert56to57 EXSEG1.nam
+
+or
 
 mnt.py --convert56to57 *.nam
 
