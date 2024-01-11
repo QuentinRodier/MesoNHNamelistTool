@@ -1,9 +1,9 @@
 from util import getKeysValue, cleanCommas
 import re
-#f90nml
-def convert56to57(nam):
+
+def convert56to57(nam, namDict):
     """
-    Convert EXSEG*.nam in version 5.6 to version 5.7
+    Convert namelist (especially EXSEG*.nam) in version 5.6 to version 5.7
     """
     
     # New namelist NAM_NEBn
@@ -37,10 +37,27 @@ def convert56to57(nam):
     # The following protection is if one applies this function multiple times on the same namelist. Should be handle differently
     nam = nam.replace('CSUBG_AUCV_RC_RC','CSUBG_AUCV_RC')
 
-    # &NAM_PARAM_ICEn (and LIMA)
-    # Key change names
-    nam = nam.replace('NMAXITER_MICRO','NMAXITER')
-    
+    # NMAXITER in &NAM_PARAM_ICEn (Warning, in LIMA NMAXITER exists and keeps its name unchanged)   
+    if 'nam_param_ice' in namDict.keys() and 'nam_param_lima' in namDict.keys():
+        if 'nmaxiter' in namDict['nam_param_lima'].keys() and 'nmaxiter' in namDict['nam_param_ice'].keys() :
+            # In that case, replace in NAM_PARAM_ICEn but not in NAM_PARAM_LIMA
+            indICE = nam.find('&NAM_PARAM_ICE')
+            indLIMA = nam.find('&NAM_PARAM_LIMA')
+            if indICE < indLIMA:
+                nam = nam.replace('NMAXITER','NMAXITER_MICRO', 1) # Replace only at first occurence ==> in NAM_PARAM_ICE
+            else:
+                nam = nam.replace('NMAXITER','MICRO_LIMA', 1) # temporary replace NMAXITER by NMAXITER_MICRO_LIMA
+                nam = nam.replace('NMAXITER','NMAXITER_MICRO', 1) # replace in PARAM_ICE
+                nam = nam.replace('MICRO_LIMA','NMAXITER', 1) # replace back correctly by NMAXITER in PARAM_LIMA
+        elif 'nmaxiter' in namDict['nam_param_lima'].keys() : # if present only in LIMA, do nothing
+            pass
+        else: # if present only in PARAM_ICE
+            nam = nam.replace('NMAXITER','NMAXITER_MICRO') 
+    elif 'nam_param_lima' in namDict.keys(): # NAM_PARAM_ICE not present, do nothing as NAM_PARAM_LIMA NMAXITER is not changed
+        pass
+    else: # replace in NAM_PARAM_ICEn NMAXITER if present.
+        nam = nam.replace('NMAXITER','NMAXITER_MICRO') 
+
     # Keys moved to NAM_PARAM_ICEn
     nam_to_icen_keys = ['CSUBG_AUCV_RC', 'CSUBG_AUCV_RI', 'CSUBG_MF_PDF']
     for el in nam_to_icen_keys:
@@ -124,5 +141,5 @@ def convert56to57(nam):
     return nam
 
 class Version():
-    def convert56to57(self):
-        self._outputnamelist = convert56to57(self._outputnamelist)
+    def convert56to57(self, namDict):
+        self._outputnamelist = convert56to57(self._outputnamelist, self._namDict)
