@@ -71,7 +71,7 @@ if __name__ == '__main__':
             if args.convert56to57: 
                 namelist_tool.convert56to57(namelist_tool._namDict)
                 namelist_tool.write()    
-                if args.applyf90nml:
-                    namelist_tool.openwithnml()
-                    namelist_tool.applyf90nml()
-                    namelist_tool.writewithnml()
+            if args.applyf90nml:
+                namelist_tool.openwithnml()
+                namelist_tool.applyf90nml()
+                namelist_tool.writewithnml()
