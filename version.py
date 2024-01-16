@@ -28,8 +28,10 @@ def convert56to57(nam, namDict):
     # Key change names
     nam = nam.replace('XKEMIN','XTKEMIN')
     nam = nam.replace('XCEDIS','XCED')
+    nam = nam.replace('CSUBG_AUCV_RI','CSUBG_RIAUCV') # protect CSUBG_AUCV_RI
     nam = nam.replace('CSUBG_AUCV','CSUBG_AUCV_RC')
-    
+    nam = nam.replace('CSUBG_RIAUCV','CSUBG_AUCV_RI') # remove protection CSUBG_AUCV_RI
+
     # &NAM_TURB_CLOUD removed, keys moved to NAM_TURBn
     if nam.find('NMODEL_CLOUD') != -1:
         print('WARNING, NMODEL_CLOUD must be converted ----BY HAND--- with LCLOUDMODIF=T in &NAM_TURBn to each respective EXSEGn.nam ')
