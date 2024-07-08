@@ -4,8 +4,9 @@ import os
 import f90nml
 from version import Version
 from prettify import Prettify
+from check import Check
 
-class NAMELIST_TOOL(Version, Prettify):
+class NAMELIST_TOOL(Version, Prettify, Check):
 
     def __init__(self, filename, output=None):
         """
@@ -48,7 +49,7 @@ class NAMELIST_TOOL(Version, Prettify):
             self._outputnamelist.write(fnml)
         if self._output is None and self._filename != self._originalName:
             os.unlink(self._originalName)
-
+            
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Namelist conversion from 5.6 to 5.7. Use only ONE TIME by namelist file. You may save your namelist before applying.')
@@ -64,6 +65,11 @@ if __name__ == '__main__':
     #Prettify
     gAspect = parser.add_argument_group('Aspect and prettifying control')
     gAspect.add_argument('--applyf90nml', help='Only read and write by f90nml makes it prettier and ordered (not testes yet)', default=False, action='store_true')
+    
+    #Checks
+    gChecks = parser.add_argument_group('Control of the namelist format and values')
+    gChecks.add_argument('--checkFormat', help='Control the format of the namelist (missing /, duplicates of &NAM_XXX, extra ., etc)', default=False, action='store_true')
+    
 
     args = parser.parse_args()
     for inputfile in args.INPUT:
@@ -75,3 +81,5 @@ if __name__ == '__main__':
                 namelist_tool.openwithnml()
                 namelist_tool.applyf90nml()
                 namelist_tool.writewithnml()
+            if args.checkFormat:
+                namelist_tool.checkFormat()
