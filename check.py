@@ -1,4 +1,5 @@
 from iteration_utilities import duplicates
+from util import nextSignificantChar
 
 def checkFormat(nam):
         """
@@ -12,10 +13,12 @@ def checkFormat(nam):
         """
         # Look for all sub-groups
         subGroups = []
+        namelist = {}
         first4=''
-        inSub = False
+        currentGroup=''
+        inSubName = False
+        inComment = False
         for i,el in enumerate(nam):
-
             # Check '&' in front of groups
             first4+=el
             # first4 keeps only the first 4 characters to look for 'NAM_'
@@ -25,26 +28,45 @@ def checkFormat(nam):
                 completeName = ''
                 j=1
                 while nam[i+j] != ' ':
-                    completeName+=nam[j]
+                    completeName+=nam[i+j]
                     j+=1
-                print('!!!!! ERROR: MISSING & IN FRONT OF ' + completeName + ' !!!!!')
+                print('!!!!! ERROR: MISSING & IN FRONT OF NAM_' + completeName + ' !!!!! CHECK THE NAMELIST')
             
             # Look for all sub-groups
             if el == '&':
                 sub=''
-                inSub=True
+                inSubName=True
+                endingGroup = False
             elif el ==' ' or el == '\n':
-                if inSub:
-                     subGroups.append(sub)
-                inSub=False
-            elif inSub:
+                if inSubName:
+                     namelist[sub] = {}
+                     currentGroup = sub
+                inSubName = False
+                inComment = False
+            elif inSubName:
                  sub+=el
             else:
                  exit
-        print(subGroups)
+            
+            # Look for key-values
+            #if currentGroup != '':
 
+            # Check for mis-placement of /
+            if el == '/':
+                endingGroup = True
+            if endingGroup:
+                nextChar = nextSignificantChar(nam,i)
+                if nextChar == '!': inComment = True
+                # / is present: we look for any char different from & but ignoring comments !
+                if nextChar and \
+                   nextChar != '&' and  \
+                   not inComment:
+                    print('!!!!! ERROR: ENDING / MIS-PLACED FOR ' + currentGroup + ' !!!!! CHECK THE NAMELIST')
+                    endingGroup = False
+
+        print(namelist.keys())    
         # Check duplicates of sub-groups from Pypi iteration_utilities.duplicates
-        if len(list(duplicates(subGroups))) != 0:
+        if len(list(duplicates(namelist.keys()))) != 0:
             print('!!!!! ERROR: DUPLICATES OF GROUPS !!!!!')
             print(list(duplicates(subGroups)))
         else:
