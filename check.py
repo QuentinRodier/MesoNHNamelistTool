@@ -18,6 +18,7 @@ def checkFormat(nam):
         currentGroup=''
         inSubName = False
         inComment = False
+        endingGroup = True
         for i,el in enumerate(nam):
             # Check '&' in front of groups
             first4+=el
@@ -34,6 +35,8 @@ def checkFormat(nam):
             
             # Look for all sub-groups
             if el == '&':
+                if not endingGroup:
+                    print('!!!!! ERROR: MISSING / AT THE END OF ' + currentGroup + ' !!!!! CHECK THE NAMELIST')
                 sub=''
                 inSubName=True
                 endingGroup = False
