@@ -12,8 +12,24 @@ def checkFormat(nam):
         """
         # Look for all sub-groups
         subGroups = []
+        first4=''
         inSub = False
-        for el in nam:
+        for i,el in enumerate(nam):
+
+            # Check '&' in front of groups
+            first4+=el
+            # first4 keeps only the first 4 characters to look for 'NAM_'
+            if len(first4)>5:
+                 first4=first4[1:]
+            if first4[1:].upper() == 'NAM_' and first4[0] != '&':
+                completeName = ''
+                j=1
+                while nam[i+j] != ' ':
+                    completeName+=nam[j]
+                    j+=1
+                print('!!!!! ERROR: MISSING & IN FRONT OF ' + completeName + ' !!!!!')
+            
+            # Look for all sub-groups
             if el == '&':
                 sub=''
                 inSub=True
@@ -26,12 +42,13 @@ def checkFormat(nam):
             else:
                  exit
         print(subGroups)
-        # Check duplicates of sub-groups:
+
+        # Check duplicates of sub-groups from Pypi iteration_utilities.duplicates
         if len(list(duplicates(subGroups))) != 0:
-            print('!!!!! ERROR: DUPLICATES OF SUB-GROUPS !!!!!')
+            print('!!!!! ERROR: DUPLICATES OF GROUPS !!!!!')
             print(list(duplicates(subGroups)))
         else:
-            print(' Sub-groups OK (no duplicates)')
+            print(' Groups OK (no duplicates)')
               
 
 def checkValues(nam):
